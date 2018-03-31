@@ -3,11 +3,36 @@ Clique is a geolocation-based file sharing client designed to help you explore y
   - User authentication (sign-up, sign-in, logout, and change password
   - Create, read, update, and delete actions on the database containing user photos and metadata such as titles, descriptions, tags, and comments.
 
+## Repository links
+[Client Repo] - https://github.com/FiniteL00p/pctr
+[Backend/API Repo] - https://github.com/FiniteL00p/pctr_api
+
+## Deployed links
+[Client] - https://finitel00p.github.io/pctr/
+[Backend/API] - https://file-bucket-api.herokuapp.com/
+
 ## API components
 1. Node.js
 2. MongoDB and Mongoose
 
-### API Specific Planned Feature Enhancements
+## API Routes
+| Verb   | URI Pattern            | Controller#Action       |
+|--------|------------------------|-------------------------|
+| POST   | `/sign-up`             | `users#signup`          |
+| POST   | `/sign-in`             | `users#signin`          |
+| PATCH  | `/change-password`     | `users#changePassword`  |
+| DELETE | `/sign-out`            | `users#signout`         |
+| GET    | `/images`              | `images#index`          |
+| GET    | `/images/:id`          | `images#show`           |
+| POST   | `/images`              | `images#create`         |
+| PATCH  | `/images/:id`          | `images#update`         |
+| GET    | `/images/:id`          | `images#destroy`        |
+| POST   | `/images`              | `images#addComment`     |
+| PATCH  | `/images/:id`          | `images#editComment`    |
+| GET    | `/user-location/:id`   | `users#updateLocation`  |
+|--------|------------------------|-------------------------|
+
+## API Specific Planned Feature Enhancements
 
 1. [Feature Description] - Update schema to allow for the creation of a search feature using tags or other metadata
 
