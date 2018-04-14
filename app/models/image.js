@@ -21,8 +21,10 @@ const imageSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  latitude: Number,
-  longitude: Number,
+  loc: {
+    type: [Number],  // [<longitude>, <latitude>]
+    index: '2d'      // create the geospatial index
+  },
   city: String,
   state: String,
   country: String,
