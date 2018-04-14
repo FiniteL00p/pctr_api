@@ -12,10 +12,33 @@ const setUser = require('./concerns/set-current-user')
 const setModel = require('./concerns/set-mongoose-model')
 
 const s3Upload = require('lib/aws-upload')
+console.log(s3Upload)
 const multer = require('multer')
 const interimMulterUpload = multer({ dest: '/tmp/' })
 
 const index = (req, res, next) => {
+  if(req.query.latitude && req.query.longitude) {
+    const maxDistance = 0.01963495408493679;
+    const coords = [];
+    coords[0] = req.query.longitude;
+    coords[1] = req.query.latitude;
+    console.log('ran')
+    Image.find({
+      loc: {
+       $near: coords,
+       $maxDistance: maxDistance
+     }
+    })
+      // can use .populate() on an array as well!
+      .populate('_owner')
+      //
+      .then(images => res.json({
+        images: images.map((e) =>
+          e.toJSON({ user: req.user }))
+      }))
+      .catch(next)
+  }
+  else {
   Image.find()
     // can use .populate() on an array as well!
     .populate('_owner')
@@ -25,6 +48,7 @@ const index = (req, res, next) => {
         e.toJSON({ user: req.user }))
     }))
     .catch(next)
+  }
 }
 
 const show = (req, res) => {
@@ -38,11 +62,13 @@ const show = (req, res) => {
 }
 
 const create = (req, res, next) => {
+  console.log(req.body.image.loc)
   // create file object from our multer-req object, which we will then pass
   // to s3Upload and the create function
   const file = {
     path: req.file.path,
     title: req.body.image.title,
+    loc: req.body.image.loc,
     description: req.body.image.description,
     tags: req.body.image.tags,
     originalname: req.file.originalname,
@@ -58,8 +84,7 @@ const create = (req, res, next) => {
       title: file.title,
       description: file.description,
       tags: file.tags,
-      latitude: req.body.image.latitude,
-      longitude: req.body.image.longitude,
+      loc: [file.loc.longitude, file.loc.latitude],
       city: req.body.image.city,
       state: req.body.image.state,
       country: req.body.image.country,
